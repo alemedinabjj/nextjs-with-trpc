@@ -1,44 +1,28 @@
+import { publicProcedure, router } from './trpc'
 import { z } from 'zod'
 
-import { publicProcedure, router } from './trpc'
+const users = [
+  { id: 1, name: 'Tim' },
+  { id: 2, name: 'Joe' },
+]
 
 export const appRouter = router({
-  getData: publicProcedure.query(async () => {
-    // Here you would fetch data from a database in a
-    // real-life application.
-    console.log('getData')
-    return 'getData'
+  listUsers: publicProcedure.query(() => {
+    return users
   }),
-  setData: publicProcedure.input(z.string()).mutation(async ({ input }) => {
-    // Here you would update a database using the
-    // input string passed into the procedure
-    console.log(input)
-    return input
-  }),
-
-  listUsers: publicProcedure.query(async () => {
-    // Here you would fetch data from a database in a
-    // real-life application.
-    const fakeUsers = Array.from({ length: 10 }, (_, i) => ({
-      id: i,
-      name: `User ${i}`,
-    }))
-
-    return fakeUsers
-  }),
-
-  registerUser: publicProcedure
+  addUser: publicProcedure
     .input(
       z.object({
         name: z.string(),
-        email: z.string().email(),
       }),
     )
-    .mutation(async ({ input }) => {
-      // Here you would update a database using the
-      // input string passed into the procedure
-      console.log(input)
-      return input
+    .mutation(({ input }) => {
+      const newUser = {
+        id: users.length + 1,
+        name: input.name,
+      }
+      users.push(newUser)
+      return newUser
     }),
 })
 // This type will be used as a reference later...
