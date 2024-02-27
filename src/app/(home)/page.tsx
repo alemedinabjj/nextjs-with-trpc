@@ -1,5 +1,5 @@
 import { Users } from '@/app/_components/users'
-import { serverClient } from './_trpc/serverClient'
+import { serverClient } from '../_trpc/serverClient'
 
 export default async function Home() {
   const users = await serverClient.listUsers()
